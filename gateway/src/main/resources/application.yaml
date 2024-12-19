@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: service-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: student-service
+          uri: lb://Service-student
+          predicates:
+            - Path=/api/students/**
+        - id: school-service
+          uri: lb://Service-school
+          predicates:
+            - Path=/api/schools/**
+    eureka:
+      client:
+        service-url:
+          defaultZone: http://localhost:8761/eureka/
+      instance:
+        hostname: localhost
