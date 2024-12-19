@@ -1,6 +1,6 @@
 package com.example.auth.controller;
 
-import com.example.auth.service.AuthService;
+import com.example.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,12 +9,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthenticationController {
+public class AuthController {
 
-    private final AuthService authService;
+    private final UserService authService;
 
     @Autowired
-    public AuthenticationController(AuthService authService) {
+    public AuthController(UserService authService) {
         this.authService = authService;
     }
 
