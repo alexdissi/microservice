@@ -10,35 +10,33 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class AuthService {
-
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+public class UserService {
 
     @Autowired
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public String login(String username, String password) {
-        Optional<User> foundUser = userRepository.findByUsername(username);
+        Optional<User> userOpt = userRepository.findByUsername(username);
 
-        if (foundUser.isPresent()) {
-            User user = foundUser.get();
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
             if (passwordEncoder.matches(password, user.getPassword())) {
-                return jwtUtil.createToken(user.getUsername());
+                return jwtUtil.generateToken(user.getUsername());
             }
         }
-        throw new IllegalArgumentException("Incorrect username or password");
+        throw new RuntimeException("Invalid credentials");
     }
 
     public void createUser(String username, String password) {
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setPassword(passwordEncoder.encode(password));
-        userRepository.save(newUser);
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 }
